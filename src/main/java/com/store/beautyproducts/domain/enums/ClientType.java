@@ -3,6 +3,7 @@ package com.store.beautyproducts.domain.enums;
 public enum ClientType {
 
     
+    
     PESSOAFISICA(1, "Pessoa Física"),
     PESSOAJURIDICA(2, "Pessoa Jurídica");
 

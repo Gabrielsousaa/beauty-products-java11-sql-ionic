@@ -1,8 +1,11 @@
 package com.store.beautyproducts.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -127,6 +130,33 @@ public class tb_Order implements Serializable{
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+
+    @Override
+    public String toString() {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n");
+        builder.append("Order number: ");
+        builder.append(getId());
+        builder.append(", Instant: ");
+        builder.append(sdf.format(getInstant()));
+        builder.append(", Client: ");
+        builder.append(getClient().getName());
+        builder.append(", Order status: ");
+        builder.append(getPayment().getStatus().getDescricao());
+        builder.append("\n Detalhes \n");
+
+        for (tb_ItemOrder ip: getItens()){
+            builder.append(ip.toString());
+        }
+
+        builder.append("Total: ");
+        builder.append(nf.format(getValorTotal()));
+
+        return builder.toString();
     }
     
     

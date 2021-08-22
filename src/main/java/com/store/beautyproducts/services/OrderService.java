@@ -34,6 +34,10 @@ public class OrderService {
     @Autowired
     private ItemOrderRepository itemOrderRepository;
 
+    @Autowired
+    private ClientService clientService;
+
+
     public tb_Order find(Integer id) {
         Optional<tb_Order> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -43,6 +47,7 @@ public class OrderService {
     public tb_Order insert(tb_Order obj) {
         obj.setId(null);
         obj.setInstant(new Date());
+        obj.setClient(clientService.find(obj.getClient().getId()));
         obj.getPayment().setStatus(StatusPayment.PENDING);
         obj.getPayment().setOrder(obj);
         if (obj.getPayment() instanceof tb_PaymentWithBankSlip) {
@@ -54,11 +59,12 @@ public class OrderService {
         for (tb_ItemOrder ip : obj.getItens()) {
             ip.setDiscount(0.0);
             ip.setProduct(productService.find(ip.getProduct().getId()));
-            ip.setPrice(productService.find(ip.getProduct().getId()).getPrice());
+            ip.setPrice(ip.getProduct().getPrice());
             ip.setOrder(obj);
 
         }
         itemOrderRepository.saveAll(obj.getItens());
+        System.out.println(obj);
         return obj;
     }
 }

@@ -120,7 +120,7 @@ public class DBService {
         tb_Client cli1 = new tb_Client(null, "Maria Silva", "MariaSilva@gmail.com" , pe.encode("1234"), "363778912377", ClientType.PESSOAFISICA);
         cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 
-        tb_Client cli2 = new tb_Client(null, "Ana Costa", "AnaCosta@gmail.com", pe.encode("1234"), "85035575098", ClientType.PESSOAFISICA);
+        tb_Client cli2 = new tb_Client(null, "Ana Costa", "anacosta@gmail.com", pe.encode("1234"), "85035575098", ClientType.PESSOAFISICA);
         cli1.getPhones().addAll(Arrays.asList("29998345", "93656768"));
         cli2.addProfile(Profile.ADMIN);
 

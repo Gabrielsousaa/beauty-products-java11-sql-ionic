@@ -9,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,11 +22,11 @@ public abstract class AbstractEmailService implements EmailService {
     private String sender;
     @Autowired
     private TemplateEngine templateEngine;
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender javaMailSender;
-    
+
     @Override
-    public void sendOrderConfirmationEmail(tb_Order obj){
+    public void sendOrderConfirmationEmail(tb_Order obj) {
         SimpleMailMessage sm = prepareSimpleMailMessageFromOrder(obj);
         sendEmail(sm);
     }
@@ -40,7 +41,7 @@ public abstract class AbstractEmailService implements EmailService {
         return sm;
     }
 
-    protected String htmlFromTemplateOrder(tb_Order obj){
+    protected String htmlFromTemplateOrder(tb_Order obj) {
 
         Context context = new Context();
         context.setVariable("order", obj);
@@ -49,7 +50,7 @@ public abstract class AbstractEmailService implements EmailService {
     }
 
     @Override
-    public void sendOrderConfirmationHtmlEmail(tb_Order obj){
+    public void sendOrderConfirmationHtmlEmail(tb_Order obj) {
         try {
             MimeMessage mm = prepareMimeMailMessageFromOrder(obj);
             sendHtmlEmail(mm);
@@ -57,12 +58,12 @@ public abstract class AbstractEmailService implements EmailService {
         } catch (MessagingException e) {
             sendOrderConfirmationHtmlEmail(obj);
         }
- 
+
     }
 
     protected MimeMessage prepareMimeMailMessageFromOrder(tb_Order obj) throws MessagingException {
         MimeMessage mm = javaMailSender.createMimeMessage();
-        MimeMessageHelper mmh = new MimeMessageHelper(mm,true);
+        MimeMessageHelper mmh = new MimeMessageHelper(mm, true);
         mmh.setTo(obj.getClient().getEmail());
         mmh.setFrom(sender);
         mmh.setSubject("Pedido Confirmado! Código" + obj.getId());
@@ -71,5 +72,5 @@ public abstract class AbstractEmailService implements EmailService {
         return mm;
 
     }
-    
+
 }

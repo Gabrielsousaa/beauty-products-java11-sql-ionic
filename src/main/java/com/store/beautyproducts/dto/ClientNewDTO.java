@@ -48,6 +48,9 @@ public class ClientNewDTO implements Serializable {
     @Length(min=5,max=120, message = "O tamanho deve ser entre 5 e 120 caracteres")
     private String zipCode;
 
+    @NotEmpty(message = "Preenchimento obrigatório")
+    private String password;
+
     private String phoneNumber1;
     private String phoneNumber2;
     private String phoneNumber3;
@@ -58,12 +61,21 @@ public class ClientNewDTO implements Serializable {
 
     }
 
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {

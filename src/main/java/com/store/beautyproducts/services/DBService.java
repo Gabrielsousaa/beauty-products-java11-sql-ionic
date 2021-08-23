@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.store.beautyproducts.domain.tb_Address;
@@ -32,7 +33,8 @@ import com.store.beautyproducts.repositories.ProductRepository;
 
 @Service
 public class DBService {
-    
+    @Autowired
+    private BCryptPasswordEncoder pe;
     @Autowired
     private ClientRepository clientRepository; // banco usando repository
     @Autowired
@@ -114,7 +116,7 @@ public class DBService {
         estateRepository.saveAll(Arrays.asList(est1, est2));
         cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-        tb_Client cli1 = new tb_Client(null, "Maria Silva", "MariaSilva@gmail.com", "363778912377", ClientType.PESSOAFISICA);
+        tb_Client cli1 = new tb_Client(null, "Maria Silva", "MariaSilva@gmail.com" , pe.encode("1234"), "363778912377", ClientType.PESSOAFISICA);
 
         cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 

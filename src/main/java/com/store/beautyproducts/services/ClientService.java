@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.store.beautyproducts.services.exceptions.DataIntegrityException;
 import com.store.beautyproducts.domain.tb_Address;
@@ -24,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ClientService {
-    
+    @Autowired
+    private BCryptPasswordEncoder pe;
+
     @Autowired
     private ClientRepository repo;
     
@@ -70,11 +73,11 @@ public class ClientService {
     }
 
     public tb_Client fromDTO(ClientDTO objDTO){
-        return new tb_Client(objDTO.getId(), objDTO.getName(), objDTO.getEmail(),null, null);
+        return new tb_Client(objDTO.getId(), objDTO.getName(), objDTO.getEmail(),null, null ,null);
     }
     public tb_Client fromDTO(ClientNewDTO objDTO){
 
-        tb_Client cli = new tb_Client(null, objDTO.getName(), objDTO.getEmail(), 
+        tb_Client cli = new tb_Client(null, objDTO.getName(), objDTO.getEmail(),pe.encode(objDTO.getPassword()), 
         objDTO.getCPFouCNPJ(), ClientType.toEnum(objDTO.getClientType()));
 
         tb_City cid = new tb_City(objDTO.getCityId(), null, null);

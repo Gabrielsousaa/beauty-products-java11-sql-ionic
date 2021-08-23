@@ -20,6 +20,7 @@ import com.store.beautyproducts.domain.tb_PaymentWithBankCard;
 import com.store.beautyproducts.domain.tb_PaymentWithBankSlip;
 import com.store.beautyproducts.domain.tb_Product;
 import com.store.beautyproducts.domain.enums.ClientType;
+import com.store.beautyproducts.domain.enums.Profile;
 import com.store.beautyproducts.domain.enums.StatusPayment;
 import com.store.beautyproducts.repositories.AddressRepository;
 import com.store.beautyproducts.repositories.CategoryRepository;
@@ -117,16 +118,21 @@ public class DBService {
         cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
         tb_Client cli1 = new tb_Client(null, "Maria Silva", "MariaSilva@gmail.com" , pe.encode("1234"), "363778912377", ClientType.PESSOAFISICA);
-
         cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
+
+        tb_Client cli2 = new tb_Client(null, "Ana Costa", "AnaCosta@gmail.com", pe.encode("1234"), "85035575098", ClientType.PESSOAFISICA);
+        cli1.getPhones().addAll(Arrays.asList("29998345", "93656768"));
+        cli2.addProfile(Profile.ADMIN);
 
         tb_Address e1 = new tb_Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli1, c1);
         tb_Address e2 = new tb_Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+        tb_Address e3 = new tb_Address(null, "Avenida Floariano", "2016", null, "Centro", "23334445", cli2, c2);
 
         cli1.getAddresses().addAll(Arrays.asList(e1, e2));
+        cli2.getAddresses().addAll(Arrays.asList(e3));
 
-        clientRepository.saveAll(Arrays.asList(cli1));
-        addressRepository.saveAll(Arrays.asList(e1, e2));
+        clientRepository.saveAll(Arrays.asList(cli1,cli2));
+        addressRepository.saveAll(Arrays.asList(e1, e2,e3));
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 

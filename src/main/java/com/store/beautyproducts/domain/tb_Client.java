@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import com.store.beautyproducts.domain.enums.ClientType;
+import com.store.beautyproducts.domain.enums.Profile;
 
 @Entity
 public class tb_Client implements Serializable{
@@ -46,12 +49,17 @@ public class tb_Client implements Serializable{
     @ElementCollection
     @CollectionTable(name = "tb_phone_number")
     private Set<String> phones = new HashSet<>();
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "PROFILES")
+    private Set<Integer> profiles = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
     private List<tb_Order> orders = new ArrayList<>();
 
     public tb_Client() {
+    addProfile(Profile.CLIENT);
     }
 
     public tb_Client(Integer id, String name, String email, String password, String CPFouCNPJ, ClientType clientType) {
@@ -61,6 +69,7 @@ public class tb_Client implements Serializable{
         this.password = password;
         this.CPFouCNPJ = CPFouCNPJ;
         this.clientType = (clientType == null) ? null : clientType.getCod();
+        addProfile(Profile.CLIENT);
     }
 
     public Integer getId() {
@@ -93,6 +102,12 @@ public class tb_Client implements Serializable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public Set<Profile> getProfiles(){
+        return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+    }
+    public void addProfile(Profile profile) {
+        profiles.add(profile.getCod());
     }
 
     public String getPassword() {

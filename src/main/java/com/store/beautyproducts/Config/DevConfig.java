@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Profile;
 
 
 import com.store.beautyproducts.services.DBService;
+import com.store.beautyproducts.services.EmailService;
+import com.store.beautyproducts.services.SmtpEmailService;
 
 @Configuration
 @Profile("dev")
@@ -28,5 +30,9 @@ public class DevConfig {
         }
         dbservice.instantiateTestDatabase();
         return true;   
+    }
+    @Bean
+    public EmailService emailService() {
+        return new SmtpEmailService();
     }
 }

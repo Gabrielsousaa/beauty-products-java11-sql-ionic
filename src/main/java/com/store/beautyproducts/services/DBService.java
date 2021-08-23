@@ -114,7 +114,7 @@ public class DBService {
         estateRepository.saveAll(Arrays.asList(est1, est2));
         cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-        tb_Client cli1 = new tb_Client(null, "Maria Silva", "maria@gmail.com", "363778912377", ClientType.PESSOAFISICA);
+        tb_Client cli1 = new tb_Client(null, "Maria Silva", "MariaSilva@gmail.com", "363778912377", ClientType.PESSOAFISICA);
 
         cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 

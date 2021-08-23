@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 
 import com.store.beautyproducts.Security.JWTAuthenticationFilter;
+import com.store.beautyproducts.Security.JWTAuthorizationFilter;
 import com.store.beautyproducts.Security.JWTUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(PUBLIC_MATCHERS).permitAll()
         .anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

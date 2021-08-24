@@ -4,8 +4,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.store.beautyproducts.Security.UserSS;
+import com.store.beautyproducts.domain.tb_Client;
 import com.store.beautyproducts.domain.tb_ItemOrder;
 import com.store.beautyproducts.domain.tb_Order;
 import com.store.beautyproducts.domain.tb_PaymentWithBankSlip;
@@ -13,7 +18,7 @@ import com.store.beautyproducts.domain.enums.StatusPayment;
 import com.store.beautyproducts.repositories.ItemOrderRepository;
 import com.store.beautyproducts.repositories.OrderRepository;
 import com.store.beautyproducts.repositories.PaymentRepository;
-
+import com.store.beautyproducts.services.exceptions.AuthorizationException;
 import com.store.beautyproducts.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -69,5 +74,16 @@ public class OrderService {
         itemOrderRepository.saveAll(obj.getItens());
         emailService.sendOrderConfirmationHtmlEmail(obj);
         return obj;
+    }
+
+    public Page<tb_Order> findPage( Integer page, Integer linesPerPage, String orderBy,String direction) {
+        UserSS user = UserService.authenticate();
+        if(user == null){
+            throw new AuthorizationException("Acesso negado");
+        }    
+
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+        tb_Client client = clientService.find(user.getUserId());
+        return repo.findByClient(client, pageRequest);
     }
 }

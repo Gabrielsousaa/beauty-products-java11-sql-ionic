@@ -1,5 +1,6 @@
 package com.store.beautyproducts.services;
 
+import com.store.beautyproducts.domain.tb_Client;
 import com.store.beautyproducts.domain.tb_Order;
 
 import java.util.Date;
@@ -71,6 +72,22 @@ public abstract class AbstractEmailService implements EmailService {
         mmh.setText(htmlFromTemplateOrder(obj), true);
         return mm;
 
+    }
+
+    @Override
+    public void sendNewPasswordEmail(tb_Client client, String newPass){
+        SimpleMailMessage sm = prepareNewPasswordEmail(client, newPass);
+        sendEmail(sm);
+    }
+    
+    protected SimpleMailMessage prepareNewPasswordEmail(tb_Client client, String newPass) {
+        SimpleMailMessage sm =  new SimpleMailMessage();
+        sm.setTo(client.getEmail());
+        sm.setFrom(sender);
+       sm.setSubject("Solicitação de nova senha");
+        sm.setSentDate(new Date(System.currentTimeMillis()));
+        sm.setText("Nova senha: " + newPass);
+        return sm;
     }
 
 }

@@ -11,11 +11,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.store.beautyproducts.services.exceptions.AuthorizationException;
 import com.store.beautyproducts.services.exceptions.DataIntegrityException;
+import com.store.beautyproducts.Security.UserSS;
 import com.store.beautyproducts.domain.tb_Address;
 import com.store.beautyproducts.domain.tb_City;
 import com.store.beautyproducts.domain.tb_Client;
 import com.store.beautyproducts.domain.enums.ClientType;
+import com.store.beautyproducts.domain.enums.Profile;
 import com.store.beautyproducts.dto.ClientDTO;
 import com.store.beautyproducts.dto.ClientNewDTO;
 import com.store.beautyproducts.repositories.AddressRepository;
@@ -34,8 +38,15 @@ public class ClientService {
     @Autowired
     private AddressRepository addressRepository;
 
+
   
     public tb_Client find(Integer id){
+        UserSS user = UserService.authenticate();
+
+        if(user == null || user.hasRole(Profile.ADMIN) && !id.equals(user.getUserId())){
+            throw new AuthorizationException("Acesso negado");
+        }
+    
         Optional<tb_Client> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
         "Object not found ID: " + id + ", TypeOf: " + tb_Client.class.getName())); 

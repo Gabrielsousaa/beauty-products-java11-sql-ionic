@@ -1,5 +1,6 @@
 package com.store.beautyproducts.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ import com.store.beautyproducts.repositories.AddressRepository;
 import com.store.beautyproducts.repositories.ClientRepository;
 import com.store.beautyproducts.services.exceptions.ObjectNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ClientService {
@@ -38,6 +40,8 @@ public class ClientService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private S3Service s3Service;
 
   
     public tb_Client find(Integer id){
@@ -114,6 +118,10 @@ public class ClientService {
     private void updateData(tb_Client newObj, tb_Client obj){
         newObj.setName(obj.getName());
         newObj.setEmail(obj.getEmail());
+    }
+
+    public URI uploadProfilePicture(MultipartFile multipartFile){
+        return s3Service.uploadFile(multipartFile);
     }
 
 }

@@ -65,6 +65,22 @@ public class ClientService {
         return obj.orElseThrow(() -> new ObjectNotFoundException(
         "Object not found ID: " + id + ", TypeOf: " + tb_Client.class.getName())); 
     }
+    
+    public tb_Client findByEmail(String email){
+        UserSS user = UserService.authenticate();
+        if (user == null || !user.hasRole(Profile.ADMIN) && !email.equals(user.getUsername())) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
+        tb_Client obj = repo.findByEmail(email);
+        if (obj == null) {
+            throw new ObjectNotFoundException(
+                    "Objeto não encontrado! Id: " + user.getUserId()+ ", Tipo: " + tb_Client.class.getName());
+        }
+        return obj;
+    }
+
+
     @Transactional
     public tb_Client insert(tb_Client obj){
         obj.setId(null);

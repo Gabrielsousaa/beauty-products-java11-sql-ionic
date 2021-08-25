@@ -63,6 +63,13 @@ public class ClientResource {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @GetMapping(value = "/email")
+    public ResponseEntity<tb_Client> find(@RequestParam(value = "value") String email) {
+        tb_Client obj = service.findByEmail(email);
+        return ResponseEntity.ok().body(obj);
+    }
     
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping()

@@ -31,7 +31,7 @@ public class ImageService {
             }
             return image; //
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+
             throw new FileException("Error ao ler arquivo");
         }
     }

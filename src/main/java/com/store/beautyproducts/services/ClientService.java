@@ -6,12 +6,14 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import com.store.beautyproducts.services.exceptions.AuthorizationException;
 import com.store.beautyproducts.services.exceptions.DataIntegrityException;
@@ -28,7 +30,7 @@ import com.store.beautyproducts.repositories.ClientRepository;
 import com.store.beautyproducts.services.exceptions.ObjectNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.awt.image.BufferedImage;
 @Service
 public class ClientService {
     @Autowired
@@ -43,7 +45,12 @@ public class ClientService {
     @Autowired
     private S3Service s3Service;
 
-  
+    @Autowired
+    private ImageService imageService;
+
+    @Value("${img.prefix.client.profile}")
+    private String prefix;
+
     public tb_Client find(Integer id){
         UserSS user = UserService.authenticate();
 
@@ -121,7 +128,16 @@ public class ClientService {
     }
 
     public URI uploadProfilePicture(MultipartFile multipartFile){
-        return s3Service.uploadFile(multipartFile);
+
+        UserSS user = UserService.authenticate();
+        
+        if (user == null) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
+        BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+        String fileName = prefix + user.getUserId() + ".jpg";
+        return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"),fileName, "image");
     }
 
 }

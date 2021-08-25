@@ -62,6 +62,7 @@ public class tb_Client implements Serializable{
     addProfile(Profile.CLIENT);
     }
 
+
     public tb_Client(Integer id, String name, String email, String password, String CPFouCNPJ, ClientType clientType) {
         this.id = id;
         this.email = email;
@@ -99,6 +100,7 @@ public class tb_Client implements Serializable{
     public String getEmail() {
         return email;
     }
+    
 
     public void setEmail(String email) {
         this.email = email;

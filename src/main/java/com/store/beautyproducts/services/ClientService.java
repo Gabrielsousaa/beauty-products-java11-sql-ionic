@@ -51,6 +51,9 @@ public class ClientService {
     @Value("${img.prefix.client.profile}")
     private String prefix;
 
+    @Value("${img.profile.size}")
+    private Integer size;
+
     public tb_Client find(Integer id){
         UserSS user = UserService.authenticate();
 
@@ -136,6 +139,9 @@ public class ClientService {
         }
 
         BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+        jpgImage = imageService.cropSquare(jpgImage);
+        jpgImage = imageService.resize(jpgImage, size);
+        
         String fileName = prefix + user.getUserId() + ".jpg";
         return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"),fileName, "image");
     }
